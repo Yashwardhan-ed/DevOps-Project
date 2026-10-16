@@ -133,12 +133,20 @@ jobs:
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
+        id: aws-auth
+        continue-on-error: true
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-south-1
 
+      - name: Report AWS Auth Status
+        if: steps.aws-auth.outcome != 'success'
+        run: |
+          echo "::warning title=AWS Credentials Pending::AWS credentials are not valid or not yet active in secrets. EKS deployment step skipped until credentials and cluster are active."
+
       - name: Check EKS Cluster Availability
+        if: steps.aws-auth.outcome == 'success'
         id: check-cluster
         run: |
           if aws eks describe-cluster --name helpdesk-eks --region ap-south-1 >/dev/null 2>&1; then
@@ -150,18 +158,18 @@ jobs:
           fi
 
       - name: Update kubeconfig for EKS
-        if: steps.check-cluster.outputs.cluster_exists == 'true'
+        if: steps.aws-auth.outcome == 'success' && steps.check-cluster.outputs.cluster_exists == 'true'
         run: |
           aws eks update-kubeconfig \
             --region ap-south-1 \
             --name helpdesk-eks
 
       - name: Install Helm
-        if: steps.check-cluster.outputs.cluster_exists == 'true'
+        if: steps.aws-auth.outcome == 'success' && steps.check-cluster.outputs.cluster_exists == 'true'
         uses: azure/setup-helm@v4
 
       - name: Deploy via Helm
-        if: steps.check-cluster.outputs.cluster_exists == 'true'
+        if: steps.aws-auth.outcome == 'success' && steps.check-cluster.outputs.cluster_exists == 'true'
         run: |
           helm upgrade --install helpdesk ./helm/taskboard \
             --namespace helpdesk \
