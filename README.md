@@ -463,24 +463,81 @@ kubectl delete -f troubleshooting/broken-service.yaml
 
 ---
 
-## 15. Live Demonstration Guide
+## 15. Verification Screenshots
 
-A complete 15-step demonstration walkthrough for presentations and grading reviews is documented in [`DEMO.md`](DEMO.md).
+All evaluation deliverables are captured and mapped to their respective modules:
+
+| # | Topic | Module | Screenshot File | Deliverable Verified |
+|---|---|:---:|---|---|
+| **1** | **Automated Testing** | `M2` | [`screenshots/1.png`](screenshots/1.png) | 10/10 Pytest test cases passing against isolated in-memory SQLite DB |
+| **2a** | **Docker Containers** | `M4` | [`screenshots/2a.png`](screenshots/2a.png) | Multi-stage Docker Compose stack running with healthy PostgreSQL |
+| **2b** | **Application UI** | `M1` | [`screenshots/2b.png`](screenshots/2b.png) | Helpdesk Web UI (YouTube Dark Theme, ticket table, priority chips) |
+| **2c** | **Prometheus Metrics** | `M9` | [`screenshots/2c.png`](screenshots/2c.png) | Live `/metrics` output scraped via Prometheus FastAPI Instrumentator |
+| **3** | **Kubernetes Deployment** | `M8` | [`screenshots/4.png`](screenshots/4.png) | `helm list -n helpdesk` and all 5 pods running with Ingress & HPA |
+| **4** | **Autoscaling (HPA)** | `M8` | [`screenshots/7a.png`](screenshots/7a.png) | `kubectl get pods,svc,hpa` showing 2-6 replica HPA scaling |
+| **5** | **Prometheus Targets** | `M9` | [`screenshots/7b.png`](screenshots/7b.png) | ServiceMonitor target `helpdesk-backend` reporting `UP` |
+| **6** | **Grafana Dashboard** | `M9` | [`screenshots/7c.png`](screenshots/7c.png) | Grafana RED metrics dashboard (Throughput, Latency, Target stats) |
+| **7** | **Git Commit History** | `M3` | [`screenshots/8a.png`](screenshots/8a.png) | 10+ conventional commits on GitHub `main` branch |
+| **8** | **CI/CD Pipeline** | `M5` | [`screenshots/8b.png`](screenshots/8b.png) | Green 3-stage GitHub Actions workflow (Test, Build/Scan/Push, Deploy) |
+| **9** | **Trivy DevSecOps** | `M6` | [`screenshots/8c.png`](screenshots/8c.png) | Aqua Trivy container security audit in CI with zero high/crit CVEs |
+| **10** | **GHCR Image Registry** | `M5` | [`screenshots/8d.png`](screenshots/8d.png) | Packages published with immutable Git commit SHA tags |
 
 ---
 
-## 16. Grading Rubric Checklist (100 Points)
+### Visual Verification Gallery
+
+#### Module 1 & 4: Application & Docker Containers
+![Application UI](screenshots/2b.png)
+*Figure 1: Helpdesk Support Management UI with YouTube Dark aesthetic.*
+
+![Docker Compose](screenshots/2a.png)
+*Figure 2: Docker Compose multi-container stack running healthy.*
+
+#### Module 2: Automated Testing (10/10 Passing)
+![Pytest Tests](screenshots/1.png)
+*Figure 3: Pytest test suite passing 10/10 test cases in 0.11s.*
+
+#### Module 5 & 6: CI/CD Pipeline & Trivy Security Gate
+![GitHub Actions Run](screenshots/8b.png)
+*Figure 4: 100% Green 3-stage CI/CD pipeline in GitHub Actions.*
+
+![Aqua Trivy Scanner](screenshots/8c.png)
+*Figure 5: Aqua Trivy container security scan enforcing 0 High/Critical CVEs.*
+
+![GHCR Registry Packages](screenshots/8d.png)
+*Figure 6: GitHub Container Registry with immutable Git commit SHA tags.*
+
+#### Module 8: Kubernetes Orchestration & Helm
+![Helm & Kubernetes Resources](screenshots/4.png)
+*Figure 7: Helm release deployed with all 5 pods running and HPA autoscaling.*
+
+#### Module 9: Observability (Prometheus & Grafana)
+![Prometheus Targets](screenshots/7b.png)
+*Figure 8: Prometheus Targets page showing ServiceMonitor instances UP.*
+
+![Grafana Dashboard](screenshots/7c.png)
+*Figure 9: Live Grafana dashboard tracking RED performance metrics.*
+
+---
+
+## 16. Live Demonstration Guide
+
+A complete demonstration walkthrough for presentations and grading reviews is documented in [`DEMO.md`](DEMO.md) and [`private_folder/README.md`](private_folder/README.md).
+
+---
+
+## 17. Grading Rubric Checklist (100 Points)
 
 | Module | Topic | Weight | Verification Deliverables | Status |
 |---|---|:---:|---|:---:|
-| **M1** | Application | 10 pts | FastAPI backend, React YouTube UI, PostgreSQL, Alembic migrations | ✅ |
-| **M2** | Testing | 10 pts | 10 Pytest test cases passing, SQLite in-memory isolation | ✅ |
-| **M3** | Git & GitHub | 5 pts | Public repository with 10+ conventional commits, clean `.gitignore` | ✅ |
-| **M4** | Docker | 10 pts | Multi-stage build, non-root users, working `docker compose` | ✅ |
-| **M5** | CI/CD | 15 pts | 3-job GitHub Actions pipeline, green run, commit SHA tags in GHCR | ✅ |
-| **M6** | DevSecOps | 5 pts | Trivy container vulnerability scan in pipeline | ✅ |
-| **M7** | Terraform | 15 pts | AWS VPC + EKS HCL in `ap-south-1`, clean `terraform.tfvars.example` | ✅ |
-| **M8** | Kubernetes & Helm | 15 pts | `helpdesk` namespace, Helm chart, Deployments, Services, Ingress, HPA | ✅ |
-| **M9** | Observability | 10 pts | `/metrics` Prometheus endpoint, ServiceMonitor, Grafana values | ✅ |
-| **M10** | Presentation | 5 pts | Comprehensive `README.md` and 15-step `DEMO.md` presentation guide | ✅ |
-| **TOTAL** | | **100 pts** | Full DevOps Capstone Implementation | ✅ |
+| **M1** | Application | 10 pts | FastAPI backend, React YouTube UI, PostgreSQL, Alembic migrations | ✅ Complete |
+| **M2** | Testing | 10 pts | 10 Pytest test cases passing, SQLite in-memory isolation | ✅ Complete |
+| **M3** | Git & GitHub | 5 pts | Public repository with 10+ conventional commits, clean `.gitignore` | ✅ Complete |
+| **M4** | Docker | 10 pts | Multi-stage build, non-root users, working `docker compose` | ✅ Complete |
+| **M5** | CI/CD | 15 pts | 3-job GitHub Actions pipeline, green run, commit SHA tags in GHCR | ✅ Complete |
+| **M6** | DevSecOps | 5 pts | Trivy container vulnerability scan in pipeline | ✅ Complete |
+| **M7** | Terraform | 15 pts | AWS VPC + EKS HCL in `ap-south-1`, clean `terraform.tfvars.example` | ✅ Complete |
+| **M8** | Kubernetes & Helm | 15 pts | `helpdesk` namespace, Helm chart, Deployments, Services, Ingress, HPA | ✅ Complete |
+| **M9** | Observability | 10 pts | `/metrics` Prometheus endpoint, ServiceMonitor, Grafana values | ✅ Complete |
+| **M10** | Presentation | 5 pts | Comprehensive `README.md`, slides in `demo/slides.pdf`, recording script | ✅ Ready |
+| **TOTAL** | | **100 pts** | Full DevOps Capstone Implementation | ✅ **100% Complete** |
