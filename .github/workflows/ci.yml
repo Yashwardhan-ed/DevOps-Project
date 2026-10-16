@@ -55,7 +55,6 @@ jobs:
     name: Build, Scan & Push
     runs-on: ubuntu-latest
     needs: test
-    # Only push on pushes to main (not on pull requests)
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 
     permissions:
@@ -137,16 +136,30 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-south-1
 
+      - name: Check EKS Cluster Availability
+        id: check-cluster
+        run: |
+          if aws eks describe-cluster --name helpdesk-eks --region ap-south-1 >/dev/null 2>&1; then
+            echo "cluster_exists=true" >> "$GITHUB_OUTPUT"
+            echo "EKS cluster helpdesk-eks is available. Proceeding with Helm deploy."
+          else
+            echo "cluster_exists=false" >> "$GITHUB_OUTPUT"
+            echo "EKS cluster helpdesk-eks not provisioned yet on AWS. Skipping Helm deployment until terraform apply is executed."
+          fi
+
       - name: Update kubeconfig for EKS
+        if: steps.check-cluster.outputs.cluster_exists == 'true'
         run: |
           aws eks update-kubeconfig \
             --region ap-south-1 \
             --name helpdesk-eks
 
       - name: Install Helm
+        if: steps.check-cluster.outputs.cluster_exists == 'true'
         uses: azure/setup-helm@v4
 
       - name: Deploy via Helm
+        if: steps.check-cluster.outputs.cluster_exists == 'true'
         run: |
           helm upgrade --install helpdesk ./helm/taskboard \
             --namespace helpdesk \
