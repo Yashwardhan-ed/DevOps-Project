@@ -50,7 +50,7 @@ GitHub Actions CI/CD Pipeline
               ▼
     Terraform (AWS ap-south-1)
   ├── AWS VPC (2 public, 2 private subnets, NAT Gateway)
-  └── AWS EKS Cluster (v1.31) with t3.medium Managed Worker Nodes
+  └── AWS EKS Cluster (v1.31) with t3.small Managed Worker Nodes (Free-Tier eligible)
               │
               ▼
          Helm Chart
@@ -296,7 +296,7 @@ Terraform provisions the complete cloud environment in AWS region `ap-south-1` (
 * **VPC**: `10.20.0.0/16` CIDR with 2 public subnets (`10.20.101.0/24`, `10.20.102.0/24`) and 2 private subnets (`10.20.1.0/24`, `10.20.2.0/24`).
 * **NAT Gateway**: Single NAT Gateway for private subnet outbound internet access.
 * **EKS Cluster**: Kubernetes v1.31 cluster named `helpdesk-eks`.
-* **Managed Node Group**: 2 to 4 `t3.medium` EC2 worker nodes.
+* **Managed Node Group**: 2 to 4 `t3.small` EC2 worker nodes (Free-Tier eligible).
 
 ### Provisioning Steps:
 ```bash
