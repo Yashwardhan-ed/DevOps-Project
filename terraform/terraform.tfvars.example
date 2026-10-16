@@ -1,0 +1,6 @@
+# Copy this file to terraform.tfvars and fill in your own values.
+# NEVER commit terraform.tfvars to Git — it is in .gitignore.
+
+aws_region   = "ap-south-1"
+cluster_name = "helpdesk-eks"
+environment  = "dev"

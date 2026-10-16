@@ -1,6 +1,12 @@
 apiVersion: v1
 kind: Service
-metadata: {name: taskboard-frontend}
+metadata:
+  name: helpdesk-frontend
+  namespace: {{ .Values.namespace }}
 spec:
-  selector: {app: taskboard-frontend}
-  ports: [{port: 80, targetPort: 80}]
+  selector:
+    app: helpdesk-frontend
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80

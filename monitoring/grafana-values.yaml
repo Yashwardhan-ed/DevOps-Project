@@ -1,0 +1,65 @@
+adminPassword: "helpdesk-admin"
+
+service:
+  type: ClusterIP
+
+datasources:
+  datasources.yaml:
+    apiVersion: 1
+    datasources:
+      - name: Prometheus
+        type: prometheus
+        url: http://kube-prometheus-stack-prometheus:9090
+        access: proxy
+        isDefault: true
+
+dashboardProviders:
+  dashboardproviders.yaml:
+    apiVersion: 1
+    providers:
+      - name: default
+        orgId: 1
+        folder: Helpdesk
+        type: file
+        disableDeletion: false
+        editable: true
+        options:
+          path: /var/lib/grafana/dashboards/default
+
+dashboards:
+  default:
+    helpdesk-overview:
+      json: |
+        {
+          "title": "Helpdesk Overview",
+          "panels": [
+            {
+              "type": "stat",
+              "title": "HTTP Requests / sec",
+              "targets": [{"expr": "rate(http_requests_total{job=\"helpdesk-backend\"}[1m])"}]
+            },
+            {
+              "type": "stat",
+              "title": "Request Latency (p95)",
+              "targets": [{"expr": "histogram_quantile(0.95, rate(http_request_duration_seconds_bucket{job=\"helpdesk-backend\"}[5m]))"}]
+            },
+            {
+              "type": "stat",
+              "title": "Error Rate",
+              "targets": [{"expr": "rate(http_requests_total{job=\"helpdesk-backend\",status=~\"5..\"}[1m])"}]
+            }
+          ],
+          "schemaVersion": 36
+        }
+
+persistence:
+  enabled: true
+  size: 2Gi
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 256Mi
+  limits:
+    cpu: 300m
+    memory: 512Mi

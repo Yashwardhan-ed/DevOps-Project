@@ -1,1 +1,1 @@
-{{- define "taskboard.fullname" -}}{{ .Release.Name }}-taskboard{{- end }}
+{{- define "helpdesk.fullname" -}}{{ .Release.Name }}-helpdesk{{- end }}
