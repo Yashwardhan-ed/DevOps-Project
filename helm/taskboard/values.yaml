@@ -36,4 +36,5 @@ resources:
 
 monitoring:
   serviceMonitor:
-    enabled: true
+    # Set to true after installing Prometheus Operator (kube-prometheus-stack)
+    enabled: false
